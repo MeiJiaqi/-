@@ -27,5 +27,6 @@ struct tm *time_p;
 Dict* p = 0;     //头指针
 int wordNum = 0;   //单词总数
 
-Mist* mp = 0;
+Mist* mp = 0;    //错题本链表头指针
+Mist* tmp = 0;   //错题本链表尾指针
 int mistNum = 0;

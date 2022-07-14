@@ -5,11 +5,14 @@
 #ifndef CLION_METHOD_H
 #define CLION_METHOD_H
 #endif //CLION_METHOD_H
+
+#include <unistd.h>
 #include "Data.h"
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
 #include "math.h"
+
 
 int word_spell();
 int choose_meaning();
@@ -184,11 +187,15 @@ void words_game()
         printf("请输入其中的一个！\n");
         scanf("%d",&op);
     }
+    srand(time(NULL));
     int i = 1;
     int fenshu=0;
-    for(i=1;i<=20;i++)
+    printf("请输入题目数量：\n");
+    int count;
+    scanf("%d",&count);
+    for(i=1;i<=count;i++)
     {
-        printf("%d/20\n",i);
+        printf("%d/%d\n",i,count);
         switch (op) {
             case 1:
                 if(word_spell())
@@ -199,7 +206,6 @@ void words_game()
                     fenshu++;
                 break;
             case 3:
-                srand(time(NULL));
                 int t = rand()%100;
                 if(t<50)
                 {
@@ -217,11 +223,10 @@ void words_game()
         }
 
     }
-    printf("游戏结束，您的分数为%d/20\n",fenshu);
+    printf("游戏结束，您的分数为%d/%d\n",fenshu,count);
 }    //游戏
 int word_spell()
 {
-    srand(time(NULL));
     int t = rand()%wordNum;
     Dict *head = p;
     while(t--)
@@ -252,7 +257,7 @@ int word_spell()
 }     //拼写游戏
 int choose_meaning()
 {
-    srand(time(NULL));
+
     int t = rand()%wordNum;
     Dict *head = p;
     while(t--)
@@ -264,11 +269,10 @@ int choose_meaning()
     snprintf(title,200,"单词为%s,请选择意思： ",head->word);
     char an[100]= {0};
     strcpy(an,head->meaning);
-    srand(time(NULL));
     t = rand()%4 +1;
     for(int i=1;i<5;i++)
     {
-        srand(time(NULL));
+
         int j = rand()%wordNum;
         head = p;
         while(j--)
@@ -354,12 +358,12 @@ int modify_dict()
     Dict *head = p;
     if(op==1)
     {
-        while(strcmp(str,head->word)!=0&&head!=NULL)
+        while(head!=NULL&&head->word&&strcmp(str,head->word)!=0)
             head = head ->next;
     }
     if(op==2)
     {
-        while(strcmp(str,head->meaning)!=0&&head!=NULL)
+        while(head!=NULL&&head->meaning&&strcmp(str,head->meaning)!=0)
             head = head ->next;
     }
     printf("请输入修改后的单词和意思：\n单词：");
@@ -385,10 +389,7 @@ void insert_mist(char ti[],char an[],char tim[])
     {
         head = head ->next;
     }
-    if(head->title)
-    {
-        head = head->next;
-    }
+
     head->title = (char *) malloc(strlen(ti)*sizeof(char));   //给新的title赋值
     memset(head->title,0,sizeof(ti));
     strcpy(head->title,ti);
