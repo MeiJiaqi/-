@@ -4878,7 +4878,7 @@ offspring   n.子女，子孙
 often   adv.经常，常常
 oh   int.哦，嗬
 oil   n.油，石油
-o.k.   adj.,n.(缩)对，行
+ok   adj.,n.(缩)对，行
 old   adj.老的，...岁的
 olive   n.橄榄(树)
 omen   n.前兆

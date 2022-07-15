@@ -6,7 +6,7 @@
 #define CLION_METHOD_H
 #endif //CLION_METHOD_H
 
-#include <unistd.h>
+
 #include "Data.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -96,26 +96,25 @@ int load_mist(Mist** p,const char* filename) {
         {
             break;
         }
-        printf("%s\n",line);
         char c;
         fscanf(file,"%c",&c);
         if(len>0)
         {
             char* temp = NULL;
             temp=strtok(line,"   ");     //分割符号为三个空格
-            printf("%s\n",temp);
+
             headP->title=(char*) malloc(strlen(temp)*sizeof (char));     //读取title
             memset(headP->title, 0, strlen(temp));
             strcpy(headP->title, temp);
 
             temp = strtok(NULL,"   ");
-            printf("%s\n",temp);
+
             headP->answer=(char*) malloc(strlen(temp)*sizeof (char));   //读取answer
             memset(headP->answer, 0, strlen(temp));
             strcpy(headP->answer, temp);
 
             temp = strtok(NULL,"   ");
-            printf("%s\n",temp);
+
             headP->time=(char*) malloc(strlen(temp)*sizeof (char));  //读取time
             memset(headP->time, 0, strlen(temp));
             strcpy(headP->time, temp);
@@ -124,7 +123,7 @@ int load_mist(Mist** p,const char* filename) {
             memset(headP->next,0,sizeof (Mist));
             headP=headP->next;
             counter++;
-            printf("111111\n");
+
         }
     }
     fclose(file);
@@ -243,13 +242,13 @@ int word_spell()
 {
     int t = rand()%wordNum;
     Dict *head = p;
-    while(t--)
+    while(t--&&head->next)
     {
         head = head->next;
     }
     printf("单词意思为: %s \n请输入单词：",head->meaning);
     char title[50] = { 0 };
-    snprintf(title,50,"单词意思为:%s请输入单词：",head->meaning);
+    snprintf(title,50,"单词意思为：%s，请输入单词：",head->meaning);
     char temp[50] = {0};
     scanf("%s",temp);
     char answer[50] = {0};
@@ -274,13 +273,13 @@ int choose_meaning()
 
     int t = rand()%wordNum;
     Dict *head = p;
-    while(t--)
+    while(t--&&head->next)
     {
         head = head->next;
     }
     printf("单词为 %s\n",head->word);
     char title[200] = {0};
-    snprintf(title,200,"单词为%s,请选择意思:",head->word);
+    snprintf(title,200,"单词为%s,请选择意思：",head->word);
     char an[100]= {0};
     strcpy(an,head->meaning);
     t = rand()%4 +1;
@@ -289,7 +288,7 @@ int choose_meaning()
 
         int j = rand()%wordNum;
         head = p;
-        while(j--)
+        while(j--&&head->next)
         {
             head = head->next;
         }
@@ -321,7 +320,7 @@ int choose_meaning()
     else
     {
         char answer[50] = { 0 };
-        snprintf(answer,50,"您的答案为%d,正确答案为%d",op,t);
+        snprintf(answer,50,"您的答案为：%d，正确答案为：%d",op,t);
         char time[50] = {0};
         get_time(time);
 
@@ -425,11 +424,14 @@ void showMist()
     Mist *head = mp;
     int i = 1;
     char* temp = NULL;
+    char tem[200] = {0};
+
     while(head)
     {
         if(head->title&&head->answer&&head->time)
         {
-           temp = strtok(head->title,"*");
+            strcpy(tem,head->title);
+           temp = strtok(tem,"*");
             printf("%d. %s\n",i,temp);
             while(temp!=NULL)
             {
@@ -483,6 +485,30 @@ void save_to_file()
         head1 = head1 ->next;
     }
     fclose(file1);
+}
+void free_all()
+{
+    Dict* head =  p;
+
+    while(head)
+    {
+        free(head->word);
+        free(head->meaning);
+        Dict *temp = head->next;
+        free(head);
+        head = temp;
+    }
+
+    Mist * head1 = mp;
+    while(head1)
+    {
+        free(head1->title);
+        free(head1->answer);
+        free(head1->time);
+        Mist * temp = head1->next;
+        free(head1);
+        head1 = temp;
+    }
 }
 void clear()
 {
