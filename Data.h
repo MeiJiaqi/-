@@ -10,23 +10,26 @@ typedef struct dict_
 {
     char *word;
     char *meaning;
-    struct dict_ *next;//æŒ‡å‘é“¾è¡¨ä¸‹ä¸€ä¸ªèŠ‚ç‚¹çš„æŒ‡é’ˆ
+    struct dict_ *next;//Ö¸ÏòÁ´±íÏÂÒ»¸ö½ÚµãµÄÖ¸Õë
 } Dict;
 
 typedef struct mist_
 {
-    char* title;    //é”™é¢˜çš„é¢˜ç›®
-    char* answer;   //é”™é¢˜çš„ç­”æ¡ˆ
-    char* time;    //é¢˜ç›®çš„æ—¶é—´
+    char* title;    //´íÌâµÄÌâÄ¿
+    char* answer;   //´íÌâµÄ´ğ°¸
+    char* time;    //ÌâÄ¿µÄÊ±¼ä
     struct mist_* next;
-}Mist;   //é”™é¢˜
+}Mist;   //´íÌâ
 
-time_t timeP;   //è·å–æ—¶é—´çš„å˜é‡
+time_t timeP;   //»ñÈ¡Ê±¼äµÄ±äÁ¿
 struct tm *time_p;
 
-Dict* p = 0;     //å¤´æŒ‡é’ˆ
-int wordNum = 0;   //å•è¯æ€»æ•°
+Dict* p = 0;     //Í·Ö¸Õë
+int wordNum = 0;   //µ¥´Ê×ÜÊı
 
-Mist* mp = 0;    //é”™é¢˜æœ¬é“¾è¡¨å¤´æŒ‡é’ˆ
-Mist* tmp = 0;   //é”™é¢˜æœ¬é“¾è¡¨å°¾æŒ‡é’ˆ
+Mist* mp = 0;    //´íÌâ±¾Á´±íÍ·Ö¸Õë
+Mist* tmp = 0;   //´íÌâ±¾Á´±íÎ²Ö¸Õë
 int mistNum = 0;
+
+char ci_dian_file[] = "D:\\program file\\clion\\ElectronicDictionary\\Ó¢ºº´Êµä.txt";
+char cuo_ti_file[] = "D:\\program file\\clion\\ElectronicDictionary\\´íÌâ±¾.txt";

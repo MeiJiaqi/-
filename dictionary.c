@@ -10,6 +10,7 @@ int main() {
     char filename2[] = "D:\\program file\\clion\\ElectronicDictionary\\错题本.txt";
     wordNum = load_dirt(&p,filename1);
     mistNum = load_mist(&mp,filename2);
+
     if(wordNum==0)
     {
         printf("加载失误\n");
@@ -20,7 +21,6 @@ int main() {
         printf("加载单词数量为%d\n",wordNum);
     }
     int choice;
-    char str[50] = {0};
     while(1)
     {
         printf("欢迎来到好记星电子词典\n");
@@ -31,7 +31,7 @@ int main() {
         printf("|***** 4.背单词 *****|\n");
         printf("|***** 5.修改词条 ***|\n");
         printf("|***** 6.查看错题本 *|\n");
-        printf("|***** 7.退出 ******|\n");
+        printf("|***** 7.保存并退出 *|\n");
         printf("|*******************|\n");
         printf("请输入你的选择?\n");
         scanf("%d", &choice);
@@ -55,6 +55,7 @@ int main() {
                 showMist();
                 break;
             case 7:
+                save_to_file();
                 exit(0);
             default:
                 printf("无该选择！\n");

@@ -39,14 +39,19 @@ int load_dirt(Dict** p,const char* filename)
     char line[500]={0};
     while (!feof(file))
     {
-        fscanf(file,"%[^\n]",line);
+        int result = fscanf(file,"%[^\n]",line);
         len = strlen(line);
+        if(result == -1)
+        {
+            break;
+        }
         char c;
         fscanf(file,"%c",&c);
         if(len>0)
         {
             char* temp = NULL;
            temp=strtok(line,"   ");
+
            headP->word=(char*) malloc(strlen(temp)*sizeof (char));
            memset(headP->word, 0, strlen(temp));
            strcpy(headP->word, temp);
@@ -84,26 +89,33 @@ int load_mist(Mist** p,const char* filename) {
     char line[500]={0};
     while (!feof(file))
     {
-        fscanf(file,"%[^\n]",line);
+        int result = fscanf(file,"%[^\n]",line);
+
         len = strlen(line);
+        if(result==-1)
+        {
+            break;
+        }
+        printf("%s\n",line);
         char c;
         fscanf(file,"%c",&c);
         if(len>0)
         {
             char* temp = NULL;
             temp=strtok(line,"   ");     //分割符号为三个空格
+            printf("%s\n",temp);
             headP->title=(char*) malloc(strlen(temp)*sizeof (char));     //读取title
             memset(headP->title, 0, strlen(temp));
             strcpy(headP->title, temp);
 
             temp = strtok(NULL,"   ");
-
+            printf("%s\n",temp);
             headP->answer=(char*) malloc(strlen(temp)*sizeof (char));   //读取answer
             memset(headP->answer, 0, strlen(temp));
             strcpy(headP->answer, temp);
 
             temp = strtok(NULL,"   ");
-
+            printf("%s\n",temp);
             headP->time=(char*) malloc(strlen(temp)*sizeof (char));  //读取time
             memset(headP->time, 0, strlen(temp));
             strcpy(headP->time, temp);
@@ -112,6 +124,7 @@ int load_mist(Mist** p,const char* filename) {
             memset(headP->next,0,sizeof (Mist));
             headP=headP->next;
             counter++;
+            printf("111111\n");
         }
     }
     fclose(file);
@@ -193,6 +206,7 @@ void words_game()
     printf("请输入题目数量：\n");
     int count;
     scanf("%d",&count);
+    int t;
     for(i=1;i<=count;i++)
     {
         printf("%d/%d\n",i,count);
@@ -206,7 +220,7 @@ void words_game()
                     fenshu++;
                 break;
             case 3:
-                int t = rand()%100;
+                t = rand()%100;
                 if(t<50)
                 {
                     if(word_spell())
@@ -235,11 +249,11 @@ int word_spell()
     }
     printf("单词意思为: %s \n请输入单词：",head->meaning);
     char title[50] = { 0 };
-    snprintf(title,50,"单词意思为: %s 请输入单词：",head->meaning);
+    snprintf(title,50,"单词意思为:%s请输入单词：",head->meaning);
     char temp[50] = {0};
     scanf("%s",temp);
     char answer[50] = {0};
-    snprintf(answer,50,"您的回答为：%s，正确拼写为 %s",temp,head->word);
+    snprintf(answer,50,"您的回答为：%s，正确拼写为：%s",temp,head->word);
     char time[50] = {0};
     get_time(time);
     if(strcmp(temp,head->word)==0)
@@ -266,7 +280,7 @@ int choose_meaning()
     }
     printf("单词为 %s\n",head->word);
     char title[200] = {0};
-    snprintf(title,200,"单词为%s,请选择意思： ",head->word);
+    snprintf(title,200,"单词为%s,请选择意思:",head->word);
     char an[100]= {0};
     strcpy(an,head->meaning);
     t = rand()%4 +1;
@@ -282,14 +296,14 @@ int choose_meaning()
         if(i!=t)
         {
             char tem[50] = {0};
-            snprintf(tem,50,"\n%d. %s",i,head->meaning);
+            snprintf(tem,50,"*%d.%s",i,head->meaning);
             strcat(title,tem);
             printf("%d. %s\n",i,head->meaning);
         }
         else
         {
             char tem[50] = {0};
-            snprintf(tem,50,"\n%d. %s",i,an);
+            snprintf(tem,50,"*%d.%s",i,an);
             strcat(title,tem);
             printf("%d. %s\n",t,an);
         }
@@ -379,7 +393,7 @@ void get_time(char str[])
     time(&timeP);
     time_p= gmtime(&timeP);
     char len[50] = {0};
-    snprintf(len, 50, "%d-%d-%d %d:%d:%d", 1900 + time_p->tm_year, 1 + time_p->tm_mon, time_p->tm_mday, 8 + time_p->tm_hour,time_p->tm_min, time_p->tm_sec);
+    snprintf(len, 50, "%d-%d-%d(%d:%d:%d)", 1900 + time_p->tm_year, 1 + time_p->tm_mon, time_p->tm_mday, 8 + time_p->tm_hour,time_p->tm_min, time_p->tm_sec);
     strcpy(str,len);
 }  //获取时间
 void insert_mist(char ti[],char an[],char tim[])
@@ -410,16 +424,65 @@ void showMist()
 {
     Mist *head = mp;
     int i = 1;
+    char* temp = NULL;
     while(head)
     {
         if(head->title&&head->answer&&head->time)
         {
-            printf("%d.%s\n %s\n %s\n",i,head->title,head->answer,head->time);
+           temp = strtok(head->title,"*");
+            printf("%d. %s\n",i,temp);
+            while(temp!=NULL)
+            {
+
+                temp= strtok(NULL,"*");
+                if(temp)
+                printf("%s\n",temp);
+            }
+            printf("%s\n%s\n",head->answer,head->time);
         }
         printf("\n");
         head=head->next;
         i++;
     }
+}
+void save_to_file()
+{
+    FILE *file = fopen(ci_dian_file,"w");
+    if(file==NULL)
+    {
+        printf("文件打开失败！请检查文件名或路径！\n");
+        return;
+    }
+    Dict* head = p;
+
+    while(head)
+    {
+
+        if(head->next)
+        {
+            fprintf(file,"%s   %s\n",head->word,head->meaning);
+        }
+
+        head=head->next;
+
+    }
+    fclose(file);
+
+
+    FILE *file1 = fopen(cuo_ti_file,"w");
+    if(file1==NULL)
+    {
+        printf("文件打开失败！请检查文件名或路径！\n");
+        return;
+    }
+    Mist* head1 = mp;
+    while(head1)
+    {
+        if(head1->title)
+        fprintf(file1,"%s   %s   %s\n",head1->title,head1->answer,head1->time);
+        head1 = head1 ->next;
+    }
+    fclose(file1);
 }
 void clear()
 {
