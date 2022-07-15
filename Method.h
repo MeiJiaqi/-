@@ -489,26 +489,23 @@ void save_to_file()
 void free_all()
 {
     Dict* head =  p;
-
+    Dict *temp = NULL;
     while(head)
     {
-        free(head->word);
-        free(head->meaning);
-        Dict *temp = head->next;
+        temp = head->next;
         free(head);
         head = temp;
     }
 
     Mist * head1 = mp;
+    Mist * temp1 = NULL;
     while(head1)
     {
-        free(head1->title);
-        free(head1->answer);
-        free(head1->time);
-        Mist * temp = head1->next;
+        temp1 = head1->next;
         free(head1);
-        head1 = temp;
+        head1 = temp1;
     }
+
 }
 void clear()
 {
